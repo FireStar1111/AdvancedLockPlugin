@@ -1,0 +1,18 @@
+settings:
+  # Amount of owned locked things;
+  PlayerMaxLockAmount: 3
+  # Amount of locked things you can acces
+  PlayerMaxUseAmount: 10
+  ActionBarForLockedMessage: true
+  ActionBarMessage: "&cLocked"
+messages:
+  SuccesMessageCreate: "&aSuccessful locked"
+  LimitLockMessage: "&cYou cant lock things, because you have reach your limit."
+  SelectBlockMessage: "&eSelect the block you want to lock. Use /lock help for more information"
+  HelpMessage: "&e&lWelcome to advanced-lock plugin! Use /lock to begin."
+  ForceEnabledSuccesMessage: "&aSuccessful enabled force-modus!"
+  ForceDisabledSuccesMessage: "&cSuccessful disabled force-modes!"
+  BlockIsLockedMessage: "&cYou can't open this, because it's locked!"
+  BlockBreakMessageAdmin: "&cIf you want to delete this lock, you can delete them in the settings-menu!"
+  BlockBreakMessageUser: "&cYou can't break this!"
+  BlockBreakMessagePlayer: "&cYou can't break this, because it's locked!"

@@ -1,0 +1,15 @@
+dev\firestar\advancedLockPlugin\managers\LockDataManager.class
+dev\firestar\advancedLockPlugin\managers\Manager.class
+dev\firestar\advancedLockPlugin\utils\LockPlayer.class
+dev\firestar\advancedLockPlugin\AdvancedLockPlugin.class
+dev\firestar\advancedLockPlugin\managers\PlayerDataManager.class
+dev\firestar\advancedLockPlugin\managers\ClassManager.class
+dev\firestar\advancedLockPlugin\listeners\onJoinEvent.class
+dev\firestar\advancedLockPlugin\utils\itemStack.class
+dev\firestar\advancedLockPlugin\utils\LocationtoString.class
+dev\firestar\advancedLockPlugin\managers\ConfigManager.class
+dev\firestar\advancedLockPlugin\utils\Color.class
+dev\firestar\advancedLockPlugin\listeners\BlockBreakEvent.class
+dev\firestar\advancedLockPlugin\Menus\SettingsMenu.class
+dev\firestar\advancedLockPlugin\listeners\onInteract.class
+dev\firestar\advancedLockPlugin\commands\LockCommand.class

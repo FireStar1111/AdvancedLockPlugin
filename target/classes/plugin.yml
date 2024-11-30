@@ -1,0 +1,11 @@
+name: advancedLockPlugin
+version: '1.0'
+main: dev.firestar.advancedLockPlugin.AdvancedLockPlugin
+api-version: '1.21'
+commands:
+  lock:
+    description: Lock things
+    usage: /<Command>
+    aliases:
+      - lc
+      - lo
