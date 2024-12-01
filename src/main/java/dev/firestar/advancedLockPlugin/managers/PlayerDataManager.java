@@ -17,7 +17,6 @@ public class PlayerDataManager {
         this.plugin = plugin;
     }
     public void loadPlayerDataFile(){
-        plugin.getDataFolder().mkdir();
         playerDataFile = new File(plugin.getDataFolder(), "playerData.yml");
         if (!playerDataFile.exists()){
             try {
@@ -26,15 +25,21 @@ public class PlayerDataManager {
                 throw new RuntimeException(e);
             }
         }
+        playerDataConfig = YamlConfiguration.loadConfiguration(playerDataFile);
 
     }
     public void setupPlayer(Player player, int lockAmount, int maxLockAmount, int inUseAmount, int maxInUseAmount){
         String key = player.getName();
-        playerDataConfig.set(key + ".uuid", player.getUniqueId());
+        playerDataConfig.set(key + ".uuid", player.getUniqueId().toString());
         playerDataConfig.set(key + ".lockAmount", lockAmount);
         playerDataConfig.set(key + ".maxLockAmount", maxLockAmount);
         playerDataConfig.set(key + ".inUseAmount", inUseAmount);
         playerDataConfig.set(key + ".maxInUseAmount", maxInUseAmount);
+        try {
+            playerDataConfig.save(playerDataFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     public boolean playerExists(Player player){
         return playerDataConfig.contains(player.getName());
@@ -58,17 +63,37 @@ public class PlayerDataManager {
     public void setMaxLockAmount(Player player, int amount){
         String key = player.getName();
         playerDataConfig.set(key + ".maxLockAmount", amount);
+        try {
+            playerDataConfig.save(playerDataFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     public void setLockAmount(Player player, int amount){
         String key = player.getName();
         playerDataConfig.set(key + ".lockAmount", amount);
+        try {
+            playerDataConfig.save(playerDataFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     public void setInUseAmount(Player player, int amount){
         String key = player.getName();
         playerDataConfig.set(key + ".inUseAmount", amount);
+        try {
+            playerDataConfig.save(playerDataFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     public void setMaxInUseAmount(Player player, int amount){
         String key = player.getName();
         playerDataConfig.set(key + ".maxInUseAmount", amount);
+        try {
+            playerDataConfig.save(playerDataFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

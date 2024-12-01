@@ -2,6 +2,7 @@ package dev.firestar.advancedLockPlugin.listeners;
 
 import dev.firestar.advancedLockPlugin.AdvancedLockPlugin;
 import dev.firestar.advancedLockPlugin.Menus.SettingsMenu;
+import dev.firestar.advancedLockPlugin.managers.ClassManager;
 import dev.firestar.advancedLockPlugin.managers.ConfigManager;
 import dev.firestar.advancedLockPlugin.managers.LockDataManager;
 import dev.firestar.advancedLockPlugin.managers.PlayerDataManager;
@@ -26,31 +27,37 @@ public class onInteract implements Listener {
     private final LockDataManager lockDataManager;
     private final PlayerDataManager playerDataManager;
     private final ConfigManager configManager;
-
-    public onInteract(AdvancedLockPlugin advancedLockPlugin, LockDataManager lockDataManager, PlayerDataManager playerDataManager, ConfigManager configManager) {
+    private final ClassManager classManager;
+    public onInteract(AdvancedLockPlugin advancedLockPlugin) {
         this.advancedLockPlugin = advancedLockPlugin;
-        this.lockDataManager = lockDataManager;
-        this.playerDataManager = playerDataManager;
-        this.configManager = configManager;
+        this.classManager = advancedLockPlugin.getClassManager();
+        this.lockDataManager = classManager.getLockDataManager();
+        this.playerDataManager = classManager.getPlayerDataManager();
+        this.configManager = classManager.getConfigManager();
     }
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event){
+        if (event.getClickedBlock() == null) return;
         Player bukkitPlayer = event.getPlayer();
         LockPlayer lockPlayer = new LockPlayer(event.getPlayer(), playerDataManager.getLockAmount(bukkitPlayer), playerDataManager.getMaxLockAmount(bukkitPlayer));
         Location location = event.getClickedBlock().getLocation();
         Material material = event.getClickedBlock().getType();
-        if (!getAllowedMaterial().contains(material)){
-            return;
-        }
         if (lockDataManager.locationExists(location)){
-            if (event.getAction().equals(Action.LEFT_CLICK_AIR) || event.getAction().equals(Action.LEFT_CLICK_BLOCK)){
+            if (lockDataManager.getBezig().contains(bukkitPlayer)){
+                bukkitPlayer.sendMessage(Color.format(configManager.getAlreadyLockedMessage()));
+                return;
+            }
+            if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
                 if (lockDataManager.getAdmins(location).contains(bukkitPlayer)){
                     return;
                 } else if (lockDataManager.getUsers(location).contains(bukkitPlayer)) {
                     return;
                 } else {
                     if (lockDataManager.getForce().contains(bukkitPlayer)){
+                        return;
+                    }
+                    if (!lockDataManager.isLocked(location)){
                         return;
                     }
                     event.setCancelled(true);
@@ -61,7 +68,7 @@ public class onInteract implements Listener {
                     return;
                 }
             } else {
-                if (lockDataManager.getAdmins(location).contains(bukkitPlayer)){
+                if (lockDataManager.getAdmins(location).contains(bukkitPlayer) || lockDataManager.getOwnerUUID(location).equals(bukkitPlayer.getUniqueId())){
                     advancedLockPlugin.getClassManager().getSettingsMenu().openMenu(bukkitPlayer, location);
                     return;
                 }
@@ -72,6 +79,11 @@ public class onInteract implements Listener {
             if (!lockDataManager.getBezig().contains(bukkitPlayer)){
                 return;
             }
+            if (!getAllowedMaterial().contains(material)){
+                bukkitPlayer.sendMessage(Color.format(configManager.getInvalidBlockMessage()));
+                return;
+            }
+            event.setCancelled(true);
             handleCreate(event, lockPlayer, location, material);
         }
 
@@ -80,7 +92,11 @@ public class onInteract implements Listener {
     }
 
     public void handleCreate(PlayerInteractEvent event, LockPlayer lockPlayer, Location location, Material material){
-        lockDataManager.setupLock(material, location, lockPlayer.getUUID(), Collections.emptyList(), true);
+        List<Player> bezig = lockDataManager.getBezig();
+        bezig.remove(event.getPlayer());
+        lockDataManager.setBezig(bezig);
+        playerDataManager.setLockAmount(lockPlayer.getPlayer(), playerDataManager.getLockAmount(lockPlayer.getPlayer()) + 1);
+        lockDataManager.setupLock(material, location, lockPlayer.getUUID(), true);
         lockPlayer.sendMessage(Color.format(configManager.getSuccesMessageCreate()));
         advancedLockPlugin.getClassManager().getSettingsMenu().openMenu(event.getPlayer(), location);
 

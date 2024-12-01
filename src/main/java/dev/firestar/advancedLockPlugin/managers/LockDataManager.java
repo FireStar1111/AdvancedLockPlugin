@@ -18,14 +18,16 @@ public class LockDataManager {
 
     private final AdvancedLockPlugin advancedLockPlugin;
     private final LocationtoString locationtoString;
+    private final ClassManager classManager;
     private File dataFile;
     private YamlConfiguration dataConfig;
     private List<Player> bezig;
     private List<Player> force;
 
-    public LockDataManager(AdvancedLockPlugin advancedLockPlugin, LocationtoString locationtoString) {
+    public LockDataManager(AdvancedLockPlugin advancedLockPlugin) {
         this.advancedLockPlugin = advancedLockPlugin;
-        this.locationtoString = locationtoString;
+        this.classManager = advancedLockPlugin.getClassManager();
+        this.locationtoString = classManager.getLocationtoString();
         bezig = new ArrayList<>();
         force = new ArrayList<>();
     }
@@ -44,26 +46,38 @@ public class LockDataManager {
     }
 
 
-    public void setupLock(Material block, Location location, UUID owner, List<Player> admins, boolean islocked){
+    public void setupLock(Material block, Location location, UUID owner, boolean islocked){
         String locationKey = locationtoString.convert(location);
         dataConfig.set(locationKey + ".worldName", location.getWorld().getName());
         dataConfig.set(locationKey + ".block", block.toString());
-        dataConfig.set(locationKey + ".owner", owner);
+        dataConfig.set(locationKey + ".owner", owner.toString());
         dataConfig.set(locationKey + ".x", location.getX());
         dataConfig.set(locationKey + ".y", location.getY());
         dataConfig.set(locationKey + ".z", location.getZ());
         dataConfig.set(locationKey + ".isLocked", islocked);
+        List<Player> admins = new ArrayList<>();
         admins.add(Bukkit.getPlayer(owner));
         int i = 1;
         for (Player player : admins){
             dataConfig.set(locationKey + ".admin" + i, player.getUniqueId().toString());
             i++;
         }
+        dataConfig.set(locationKey + ".user1", Bukkit.getPlayer(owner).getUniqueId().toString());
         try {
             dataConfig.save(dataFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    public void deleteLock(Location location){
+        String locationKey = locationtoString.convert(location);
+        dataConfig.set(locationKey, null);
+        try {
+            dataConfig.save(dataFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
     public List<Player> getAdmins(Location location){
         List<Player> admins = new ArrayList<>();
@@ -76,7 +90,7 @@ public class LockDataManager {
             } else {
                 break;
             }
-
+            i++;
         }
         return admins;
     }
@@ -87,7 +101,7 @@ public class LockDataManager {
         while (true){
             String key = locationKey + ".user" + i;
             if (dataConfig.contains(key)){
-                users.add(Bukkit.getPlayer(UUID.fromString(dataConfig.getString(key))));
+                users.add(Bukkit.getPlayer((UUID) dataConfig.get(key)));
             } else {
                 break;
             }
@@ -142,6 +156,11 @@ public class LockDataManager {
                 break;
             }
         }
+        try {
+            dataConfig.save(dataFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     public void removeAdmin(Location location, Player admin){
         String locationKey = locationtoString.convert(location);
@@ -153,6 +172,11 @@ public class LockDataManager {
                 dataConfig.set(locationKey + ".admin" + i, null);
                 break;
             }
+        }
+        try {
+            dataConfig.save(dataFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
     public boolean locationExists(Location location){
@@ -189,6 +213,16 @@ public class LockDataManager {
     }
     public UUID getOwnerUUID(Location location){
         String locationKey = locationtoString.convert(location);
-        return (UUID) dataConfig.get(locationKey + ".world");
+        return UUID.fromString(dataConfig.getString(locationKey + ".owner"));
+    }
+    public void setLocked(Location location, boolean input){
+
+        String locationKey = locationtoString.convert(location);
+        dataConfig.set(locationKey + ".isLocked", input);
+        try {
+            dataConfig.save(dataFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

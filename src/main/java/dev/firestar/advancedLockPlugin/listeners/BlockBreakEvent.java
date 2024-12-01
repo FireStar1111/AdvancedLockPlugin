@@ -1,6 +1,7 @@
 package dev.firestar.advancedLockPlugin.listeners;
 
 import dev.firestar.advancedLockPlugin.AdvancedLockPlugin;
+import dev.firestar.advancedLockPlugin.managers.ClassManager;
 import dev.firestar.advancedLockPlugin.managers.ConfigManager;
 import dev.firestar.advancedLockPlugin.managers.LockDataManager;
 import dev.firestar.advancedLockPlugin.managers.PlayerDataManager;
@@ -16,11 +17,13 @@ public class BlockBreakEvent implements Listener {
     private final LockDataManager lockDataManager;
     private final PlayerDataManager playerDataManager;
     private final ConfigManager configManager;
-    public BlockBreakEvent(AdvancedLockPlugin plugin, LockDataManager lockDataManager, PlayerDataManager playerDataManager, ConfigManager configManager) {
+    private final ClassManager classManager;
+    public BlockBreakEvent(AdvancedLockPlugin plugin) {
         this.plugin = plugin;
-        this.lockDataManager = lockDataManager;
-        this.playerDataManager = playerDataManager;
-        this.configManager = configManager;
+        this.classManager = plugin.getClassManager();
+        this.lockDataManager = classManager.getLockDataManager();
+        this.playerDataManager = classManager.getPlayerDataManager();
+        this.configManager = classManager.getConfigManager();
     }
 
     @EventHandler
@@ -29,6 +32,9 @@ public class BlockBreakEvent implements Listener {
         Player player = event.getPlayer();
         if (lockDataManager.locationExists(location)){
             event.setCancelled(true);
+            if (lockDataManager.getBezig().contains(player)){
+                event.setCancelled(true);
+            }
             if (lockDataManager.getAdmins(location).contains(player)){
                 player.sendMessage(Color.format(configManager.getBlockBreakMessageAdmin()));
             } else if (lockDataManager.getUsers(location).contains(player)) {
@@ -36,6 +42,8 @@ public class BlockBreakEvent implements Listener {
             } else {
                 player.sendMessage(Color.format(configManager.getBlockBreakMessagePlayer()));
             }
+        } else if (lockDataManager.getBezig().contains(player)){
+            event.setCancelled(true);
         }
 
 

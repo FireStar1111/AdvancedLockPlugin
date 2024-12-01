@@ -1,11 +1,11 @@
 package dev.firestar.advancedLockPlugin.managers;
 
 import dev.firestar.advancedLockPlugin.AdvancedLockPlugin;
+import dev.firestar.advancedLockPlugin.Menus.AdminMenu;
 import dev.firestar.advancedLockPlugin.Menus.SettingsMenu;
+import dev.firestar.advancedLockPlugin.Menus.SubmitMenu;
 import dev.firestar.advancedLockPlugin.commands.LockCommand;
-import dev.firestar.advancedLockPlugin.listeners.BlockBreakEvent;
-import dev.firestar.advancedLockPlugin.listeners.onInteract;
-import dev.firestar.advancedLockPlugin.listeners.onJoinEvent;
+import dev.firestar.advancedLockPlugin.listeners.*;
 import dev.firestar.advancedLockPlugin.utils.LocationtoString;
 
 public class ClassManager implements Manager {
@@ -16,14 +16,15 @@ public class ClassManager implements Manager {
     private LocationtoString locationtoString;
     private SettingsMenu settingsMenu;
     private final AdvancedLockPlugin advancedLockPlugin;
-
+    private SubmitMenu submitMenu;
+    private AdminMenu adminMenu;
     public ClassManager(AdvancedLockPlugin advancedLockPlugin) {
         this.advancedLockPlugin = advancedLockPlugin;
     }
 
     @Override
     public void registerManagers() {
-        lockDataManager = new LockDataManager(advancedLockPlugin, locationtoString);
+        lockDataManager = new LockDataManager(advancedLockPlugin);
         playerDataManager = new PlayerDataManager(advancedLockPlugin);
         configManager = new ConfigManager(advancedLockPlugin);
     }
@@ -36,21 +37,24 @@ public class ClassManager implements Manager {
     @Override
     public void registerCommands() {
 
-        advancedLockPlugin.getCommand("lock").setExecutor(new LockCommand(advancedLockPlugin, lockDataManager, playerDataManager, configManager));
+        advancedLockPlugin.getCommand("lock").setExecutor(new LockCommand(advancedLockPlugin));
 
     }
 
     @Override
     public void registerListeners() {
-        advancedLockPlugin.getServer().getPluginManager().registerEvents(new onInteract(advancedLockPlugin, lockDataManager, playerDataManager, configManager), advancedLockPlugin);
-        advancedLockPlugin.getServer().getPluginManager().registerEvents(new onJoinEvent(advancedLockPlugin, playerDataManager, configManager), advancedLockPlugin);
-        advancedLockPlugin.getServer().getPluginManager().registerEvents(new BlockBreakEvent(advancedLockPlugin, lockDataManager, playerDataManager, configManager), advancedLockPlugin);
+        advancedLockPlugin.getServer().getPluginManager().registerEvents(new onInteract(advancedLockPlugin), advancedLockPlugin);
+        advancedLockPlugin.getServer().getPluginManager().registerEvents(new onJoinEvent(advancedLockPlugin), advancedLockPlugin);
+        advancedLockPlugin.getServer().getPluginManager().registerEvents(new BlockBreakEvent(advancedLockPlugin), advancedLockPlugin);
+        advancedLockPlugin.getServer().getPluginManager().registerEvents(new onInventoryClick(advancedLockPlugin), advancedLockPlugin);
+        advancedLockPlugin.getServer().getPluginManager().registerEvents(new onLeaveListener(advancedLockPlugin), advancedLockPlugin);
     }
 
     @Override
     public void registerClasses() {
-        settingsMenu = new SettingsMenu(advancedLockPlugin, lockDataManager);
-
+        settingsMenu = new SettingsMenu(advancedLockPlugin);
+        submitMenu = new SubmitMenu(advancedLockPlugin);
+        adminMenu = new AdminMenu(advancedLockPlugin);
     }
 
     public LockDataManager getLockDataManager() {
@@ -67,5 +71,15 @@ public class ClassManager implements Manager {
 
     public SettingsMenu getSettingsMenu() {
         return settingsMenu;
+    }
+
+    public LocationtoString getLocationtoString() {
+        return locationtoString;
+    }
+    public SubmitMenu getSubmitMenu() {
+        return submitMenu;
+    }
+    public AdminMenu getAdminMenu() {
+        return adminMenu;
     }
 }

@@ -5,6 +5,8 @@ settings:
   PlayerMaxUseAmount: 10
   ActionBarForLockedMessage: true
   ActionBarMessage: "&cLocked"
+  # one step before delete a lock
+  SubmitMenu: true
 messages:
   SuccesMessageCreate: "&aSuccessful locked"
   LimitLockMessage: "&cYou cant lock things, because you have reach your limit."
@@ -16,3 +18,12 @@ messages:
   BlockBreakMessageAdmin: "&cIf you want to delete this lock, you can delete them in the settings-menu!"
   BlockBreakMessageUser: "&cYou can't break this!"
   BlockBreakMessagePlayer: "&cYou can't break this, because it's locked!"
+  AlreadySelectingMessage: "&cYou are already selecting. If you want to cancel type /lock cancel! Use /lock help for more information"
+  PlayerIsNotSelectingMessage: "&cYou are not selecting! Use /lock to select a block to lock."
+  CancelselectingSuccesMessage: "&cSelecting canceled"
+  InvalidBlockMessage: "&cYou can't select this block!"
+  AlreadyLockedMessage: "&cThis is already locked!"
+  SuccessLockDeleteMessage: "&cYou have successful deleted this lock!"
+  CancelLockDeleteMessage: "&cYou successful canceled deletion"
+  DisableLockMessage: "&cSuccessful disabled lock modus!"
+  EnabledLockMessage: "&aSuccessful enabled lock modus!"

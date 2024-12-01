@@ -1,8 +1,10 @@
 package dev.firestar.advancedLockPlugin.Menus;
 
 import dev.firestar.advancedLockPlugin.AdvancedLockPlugin;
+import dev.firestar.advancedLockPlugin.managers.ClassManager;
 import dev.firestar.advancedLockPlugin.managers.LockDataManager;
 import dev.firestar.advancedLockPlugin.utils.Color;
+import dev.firestar.advancedLockPlugin.utils.LocationtoString;
 import dev.firestar.advancedLockPlugin.utils.itemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,26 +22,30 @@ public class SettingsMenu {
 
     private final AdvancedLockPlugin plugin;
     private final LockDataManager lockDataManager;
-
-    public SettingsMenu(AdvancedLockPlugin plugin, LockDataManager lockDataManager) {
+    private final ClassManager classManager;
+    private final LocationtoString locationtoString;
+    public SettingsMenu(AdvancedLockPlugin plugin) {
         this.plugin = plugin;
-        this.lockDataManager = lockDataManager;
+        this.classManager = plugin.getClassManager();
+        this.lockDataManager = classManager.getLockDataManager();
+        this.locationtoString = classManager.getLocationtoString();
     }
 
     public void openMenu(Player player, Location location){
         Inventory inventory = Bukkit.createInventory(player, 27, "Lock-settings");
         Material material = lockDataManager.getBlock(location);
 
-        String[] lore2 = new String[2];
+        String[] lore2 = new String[3];
         lore2[0] = " ";
-        lore2[1] = "&7Click to delete this lock";
+        lore2[1] = Color.format("&7Click to delete this lock");
         ItemStack deleteButton = itemStack.create("&cDelete", Material.BARRIER, 1, lore2, true, false, false, false, null, 0);
-        inventory.setItem(11, deleteButton);
+        ItemStack deleteButton2 = itemStack.addNameSpaceKey(deleteButton, "delbutton", "location", locationtoString.convert(location));
+        inventory.setItem(11, deleteButton2);
 
 
 
         String[] lore1 = new String[3];
-        lore1[0] = Color.format("&7Click to unlock the chest");
+        lore1[0] = Color.format("&7Click to unlock");
         lore1[1] = " ";
         if (lockDataManager.isLocked(location)){
             lore1[2] = Color.format("&cLocked");
@@ -47,7 +53,8 @@ public class SettingsMenu {
             lore1[2] = Color.format("&aUnlocked");
         }
         ItemStack lockSettingsButton = itemStack.create("&aLock Settings", material, 1, lore1, true, false, true, false, null, 0);
-        inventory.setItem(13, lockSettingsButton);
+        ItemStack lockSettingsButton2 = itemStack.addNameSpaceKey(lockSettingsButton, "locksettingsbutton", "location", locationtoString.convert(location));
+        inventory.setItem(13, lockSettingsButton2);
 
         String[] lore3 = new String[2];
         lore3[0] = " ";
@@ -55,8 +62,10 @@ public class SettingsMenu {
 
 
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(lockDataManager.getOwnerUUID(location));
-        ItemStack item = itemStack.getPlayerHead(offlinePlayer, lore3);
+        ItemStack item2 = itemStack.getPlayerHead(offlinePlayer, lore3, Color.format("&aManager admins"));
+        ItemStack item = itemStack.addNameSpaceKey(item2, "adminbutton", "location", locationtoString.convert(location));
         inventory.setItem(15, item);
+        player.openInventory(inventory);
     }
 
 }

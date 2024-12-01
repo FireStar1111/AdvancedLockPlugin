@@ -1,6 +1,7 @@
 package dev.firestar.advancedLockPlugin.listeners;
 
 import dev.firestar.advancedLockPlugin.AdvancedLockPlugin;
+import dev.firestar.advancedLockPlugin.managers.ClassManager;
 import dev.firestar.advancedLockPlugin.managers.ConfigManager;
 import dev.firestar.advancedLockPlugin.managers.LockDataManager;
 import dev.firestar.advancedLockPlugin.managers.PlayerDataManager;
@@ -14,10 +15,12 @@ public class onJoinEvent implements Listener {
     private final AdvancedLockPlugin plugin;
     private final PlayerDataManager playerDataManager;
     private final ConfigManager configManager;
-    public onJoinEvent(AdvancedLockPlugin plugin, PlayerDataManager playerDataManager, ConfigManager configManager) {
+    private final ClassManager classManager;
+    public onJoinEvent(AdvancedLockPlugin plugin) {
         this.plugin = plugin;
-        this.playerDataManager = playerDataManager;
-        this.configManager = configManager;
+        this.classManager = plugin.getClassManager();
+        this.playerDataManager = classManager.getPlayerDataManager();
+        this.configManager = classManager.getConfigManager();
     }
 
 

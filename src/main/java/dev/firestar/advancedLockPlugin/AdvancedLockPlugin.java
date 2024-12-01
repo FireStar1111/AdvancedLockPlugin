@@ -14,14 +14,14 @@ public final class AdvancedLockPlugin extends JavaPlugin {
     public void onEnable() {
         System.out.println("Made by Firestar!");
         classManager = new ClassManager(this);
-        classManager.registerManagers();
-        classManager.registerClasses();
-        classManager.registerCommands();
         classManager.registerUtils();
-        classManager.registerListeners();
-        classManager.getConfigManager().loadConfigFile();
+        classManager.registerManagers();
         classManager.getLockDataManager().loadDataFile();
         classManager.getPlayerDataManager().loadPlayerDataFile();
+        classManager.registerClasses();
+        classManager.registerCommands();
+        classManager.registerListeners();
+
     }
 
     @Override
