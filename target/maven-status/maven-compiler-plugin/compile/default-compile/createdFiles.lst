@@ -21,4 +21,5 @@ dev\firestar\advancedLockPlugin\Menus\AdminMenu.class
 dev\firestar\advancedLockPlugin\listeners\BlockBreakEvent.class
 dev\firestar\advancedLockPlugin\Menus\SettingsMenu.class
 dev\firestar\advancedLockPlugin\listeners\onInteract.class
+dev\firestar\advancedLockPlugin\utils\Updater.class
 dev\firestar\advancedLockPlugin\listeners\onMoveEvent.class

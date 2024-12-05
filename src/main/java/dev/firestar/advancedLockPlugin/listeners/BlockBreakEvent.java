@@ -41,6 +41,10 @@ public class BlockBreakEvent implements Listener {
             event.setCancelled(true);
             return;
         }
+        if (lockDataManager.getInspect().contains(player)){
+            event.setCancelled(true);
+            return;
+        }
         if (!lockDataManager.locationExists(location)) {
             if (linkedLocation != null && lockDataManager.locationExists(linkedLocation)) {
                 handle(event, player, linkedLocation);
