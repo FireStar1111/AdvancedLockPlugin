@@ -2,6 +2,7 @@ package dev.firestar.advancedLockPlugin.Menus;
 
 import dev.firestar.advancedLockPlugin.AdvancedLockPlugin;
 import dev.firestar.advancedLockPlugin.managers.ClassManager;
+import dev.firestar.advancedLockPlugin.managers.ConfigManager;
 import dev.firestar.advancedLockPlugin.managers.LockDataManager;
 import dev.firestar.advancedLockPlugin.managers.PlayerDataManager;
 import dev.firestar.advancedLockPlugin.utils.Color;
@@ -11,8 +12,10 @@ import dev.firestar.advancedLockPlugin.utils.itemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ public class AdminMenu {
     private final LockDataManager lockDataManager;
     private final LocationtoString locationtoString;
     private final PlayerDataManager playerDataManager;
+    private final ConfigManager configManager;
 
     public AdminMenu(AdvancedLockPlugin plugin) {
         this.plugin = plugin;
@@ -31,11 +35,11 @@ public class AdminMenu {
         this.lockDataManager = classManager.getLockDataManager();
         this.locationtoString = classManager.getLocationtoString();
         this.playerDataManager = classManager.getPlayerDataManager();
+        this.configManager = classManager.getConfigManager();
     }
 
     public void openInv(Player player, Location location, int page) {
         Inventory inventory = Bukkit.createInventory(player, 54, "Manage admins");
-
         // Voeg glasplaten toe als decoratie
         for (int i = 9; i <= 17; i++) {
             inventory.setItem(i, itemStack.createSimple(Material.GRAY_STAINED_GLASS_PANE, " ", null, false, 1));
@@ -45,21 +49,21 @@ public class AdminMenu {
         }
 
         // Admins en users ophalen en sorteren
-        List<Player> users = lockDataManager.getUsers(location);
-        List<Player> owners = users.stream()
+        List<OfflinePlayer> users = lockDataManager.getUsers(location);
+        List<OfflinePlayer> owners = users.stream()
                 .filter(user -> lockDataManager.getOwnerUUID(location).equals(user.getUniqueId()))
                 .toList();
-        List<Player> admins = users.stream()
+        List<OfflinePlayer> admins = users.stream()
                 .filter(user -> lockDataManager.getAdmins(location).contains(user))
                 .filter(user -> !lockDataManager.getOwnerUUID(location).equals(user.getUniqueId()))
                 .toList();
-        List<Player> regularUsers = users.stream()
+        List<OfflinePlayer> regularUsers = users.stream()
                 .filter(user -> !lockDataManager.getAdmins(location).contains(user))
                 .filter(user -> !lockDataManager.getOwnerUUID(location).equals(user.getUniqueId()))
                 .toList();
 
         // Combineer de lijsten in de juiste volgorde
-        List<Player> sortedUsers = new ArrayList<>();
+        List<OfflinePlayer> sortedUsers = new ArrayList<>();
         sortedUsers.addAll(owners);
         sortedUsers.addAll(admins);
         sortedUsers.addAll(regularUsers);
@@ -70,42 +74,48 @@ public class AdminMenu {
         int slot = 18; // Startslot voor hoofden
 
         for (int i = startIndex; i < endIndex; i++) {
-            Player user = sortedUsers.get(i);
+            OfflinePlayer user = sortedUsers.get(i);
             if (user != null) {
                 if (owners.contains(user)) {
-                    inventory.setItem(slot, itemStack.getPlayerHead(Bukkit.getOfflinePlayer(user.getUniqueId()), new String[]{Color.format("&7Owner: " + user.getName())}, Color.format("&5" + user.getName())));
+                    ItemStack item = itemStack.getPlayerHead(user, new String[]{Color.format("&7Rank: &5Owner")}, Color.format("&5" + user.getName()));
+                    inventory.setItem(slot, itemStack.addNameSpaceKey(item, "player", "id",user.getUniqueId().toString()));
                 } else if (admins.contains(user)) {
                     if (!owners.contains(player)){
-                        inventory.setItem(slot, itemStack.getPlayerHead(Bukkit.getOfflinePlayer(user.getUniqueId()), new String[]{Color.format("&7Admin: " + user.getName()), " ", Color.format("&7Right click to demote")}, Color.format("&a" + user.getName())));
+                        ItemStack item = itemStack.getPlayerHead(user, new String[]{Color.format("&7Rank: &aAdmin"), " ", Color.format("&7Right click to demote")}, Color.format("&a" + user.getName()));
+                        inventory.setItem(slot, itemStack.addNameSpaceKey(item, "player", "id", user.getUniqueId().toString()));
                     } else {
-                        inventory.setItem(slot, itemStack.getPlayerHead(Bukkit.getOfflinePlayer(user.getUniqueId()), new String[]{Color.format("&7Admin: " + user.getName()), " ", Color.format("&7Right click to demote"), Color.format("&cShift-right click to delete")}, Color.format("&a" + user.getName())));
+                        ItemStack item = itemStack.getPlayerHead(user, new String[]{Color.format("&7Rank: &aAdmin"), " ", Color.format("&7Left click to demote"), Color.format("&cShift-right click to delete")}, Color.format("&a" + user.getName()));
+                        inventory.setItem(slot, itemStack.addNameSpaceKey(item, "player", "id", user.getUniqueId().toString()));
                     }
                 } else {
-                    inventory.setItem(slot, itemStack.getPlayerHead(Bukkit.getOfflinePlayer(user.getUniqueId()), new String[]{Color.format("&7User: " + user.getName()), " ", Color.format("&7Right click to promote"), Color.format("&cShift-right click to delete")}, Color.format("&e" + user.getName())));
+                    ItemStack item = itemStack.getPlayerHead(user, new String[]{Color.format("&7Rank: &eUser"), " ", Color.format("&7Right click to promote"), Color.format("&cShift-right click to delete")}, Color.format("&e" + user.getName()));
+                    inventory.setItem(slot, itemStack.addNameSpaceKey(item, "player", "id", user.getUniqueId().toString()));
                 }
             }
             slot++;
         }
 
         // Voeg "Add admin"-optie toe
-        if (slot < 44) {
+        if (slot < configManager.getDefaultUserLimit() + 17) {
             inventory.setItem(slot, itemStack.createSimple(Material.OAK_SIGN, Color.format("&aAdd user"), null, false, 1));
         }
 
         // Voeg navigatieknoppen toe
         if (page > 1) {
-            CustomPlayerHead previousPage = new CustomPlayerHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODM5OWU1ZGE4MmVmNzc2NWZkNWU0NzJmMzE0N2VkMTE4ZDk4MTg4NzczMGVhN2JiODBkN2ExYmVkOThkNWJhIn19fQ=="); // Texture voor vorige pagina
-            inventory.setItem(48, previousPage.getHead());
+            ItemStack previousPage = itemStack.createSimple(Material.ARROW, Color.format("&7<< Previous page"), null, false, 1);
+            inventory.setItem(48, previousPage);
         }
         if (endIndex < sortedUsers.size()) {
-            CustomPlayerHead nextPage = new CustomPlayerHead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzZlYmFhNDFkMWQ0MDVlYjZiNjA4NDViYjlhYzcyNGFmNzBlODVlYWM4YTk2YTU1NDRiOWUyM2FkNmM5NmM2MiJ9fX0="); // Texture voor volgende pagina
-            inventory.setItem(50, nextPage.getHead());
+            ItemStack nextPage = itemStack.createSimple(Material.ARROW, Color.format("&7Next page >>"), null, false, 1);
+            inventory.setItem(50, nextPage);
         }
 
         // Pagina-indicator
-        inventory.setItem(49, itemStack.createSimple(Material.SUNFLOWER, "Page " + page, null, false, 1));
+        ItemStack item = itemStack.createSimple(Material.SUNFLOWER, "Page " + page, null, false, 1);
+        inventory.setItem(49, itemStack.addNameSpaceKey(item, "pagebutton", "location", locationtoString.convert(location)));
 
-        // Open de inventory voor de speler
+        ItemStack returnButton = itemStack.createSimple(Material.ARROW, Color.format("&cReturn"), null, false, 1);
+        inventory.setItem(45, returnButton);
         player.openInventory(inventory);
     }
 }

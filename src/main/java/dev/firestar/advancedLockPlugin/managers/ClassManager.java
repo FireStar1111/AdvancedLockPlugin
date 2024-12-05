@@ -48,6 +48,8 @@ public class ClassManager implements Manager {
         advancedLockPlugin.getServer().getPluginManager().registerEvents(new BlockBreakEvent(advancedLockPlugin), advancedLockPlugin);
         advancedLockPlugin.getServer().getPluginManager().registerEvents(new onInventoryClick(advancedLockPlugin), advancedLockPlugin);
         advancedLockPlugin.getServer().getPluginManager().registerEvents(new onLeaveListener(advancedLockPlugin), advancedLockPlugin);
+        advancedLockPlugin.getServer().getPluginManager().registerEvents(new onSignChange(advancedLockPlugin), advancedLockPlugin);
+        advancedLockPlugin.getServer().getPluginManager().registerEvents(new onMoveEvent(advancedLockPlugin), advancedLockPlugin);
     }
 
     @Override

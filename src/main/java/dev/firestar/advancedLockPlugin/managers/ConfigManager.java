@@ -15,14 +15,18 @@ public class ConfigManager {
     //settings
     private int PlayerMaxLockAmount;
     private int PlayerMaxUseAmount;
+    private int DefaultUserLimit;
     private boolean ActionBarForLockedMessage;
     private String ActionBarMessage;
     private Boolean SubmitMenu;
+    private Boolean EnableHelpMessage;
+    private Boolean CommandNotFound;
+    private String CommandNotFoundMessage;
+
     //messages
     private String LimitLockMessage;
     private String SuccesMessageCreate;
     private String SelectBlockMessage;
-    private String HelpMessage;
     private String ForceEnabledSuccesMessage;
     private String ForceDisabledSuccesMessage;
     private String BlockIsLockedMessage;
@@ -38,6 +42,18 @@ public class ConfigManager {
     private String CancelLockDeleteMessage;
     private String DisableLockMessage;
     private String EnabledLockMessage;
+    private String UserDeleteSuccesMessage;
+    private String PromoteMessage;
+    private String DemoteMessage;
+    private String SignText;
+    private String PlayerNotFoundMessage;
+    private String PlayerIsAlreadyAnUserMessage;
+    private String AddingUserSuccessfulMessage;
+    private String ManageYourselfMessage;
+    private String CantCombineMessage;
+    private String SelectBlockToInspectMessage;
+    private String AlreadyInspectingMessage;
+    private String PlayerHasMaxUsesMessage;
 
     public ConfigManager(AdvancedLockPlugin plugin) {
         this.plugin = plugin;
@@ -50,7 +66,6 @@ public class ConfigManager {
         this.LimitLockMessage = getConfigString("messages.LimitLockMessage", "&cYou cant lock things, because you have reach your limit.");
         this.SuccesMessageCreate = getConfigString("messages.SuccesMessageCreate", "&aSuccessful locked");
         this.SelectBlockMessage = getConfigString("messages.SelectBlockMessage", "&eSelect the block you want to lock. Use /lock help for more information");
-        this.HelpMessage = getConfigString("messages.HelpMessage", "&e&lWelcome to advanced-lock plugin! Use /lock to begin.");
         this.ForceEnabledSuccesMessage = getConfigString("messages.ForceEnabledSuccesMessage", "&aSuccessful enabled force-modus!");
         this.ForceDisabledSuccesMessage = getConfigString("messages.ForceDisabledSuccesMessage", "&cSuccessful disabled force-modes!");
         this.BlockIsLockedMessage = getConfigString("messages.BlockIsLockedMessage", "&cYou can't open this, because it's locked!");
@@ -67,6 +82,22 @@ public class ConfigManager {
         this.CancelLockDeleteMessage = getConfigString("messages.CancelLockDeleteMessage", "&cYou successful canceled deletion");
         this.DisableLockMessage = getConfigString("messages.DisableLockMessage", "&cSuccessful disabled lock modus!");
         this.EnabledLockMessage = getConfigString("messages.EnabledLockMessage", "&aSuccessful enabled lock modus!");
+        this.DefaultUserLimit = getConfigInt("settings.DefaultUserLimit", 7);
+        this.UserDeleteSuccesMessage = getConfigString("messages.UserDeleteSuccesMessage", "&aSuccessful deleted user!");
+        this.PromoteMessage = getConfigString("messages.PromoteMessage", "&aUser promoted!");
+        this.DemoteMessage = getConfigString("messages.DemoteMessage", "&cUser demoted!");
+        this.SignText = getConfigString("settings.SignText", "Type here");
+        this.PlayerNotFoundMessage = getConfigString("messages.PlayerNotFoundMessage", "&cPlayer not found!");
+        this.PlayerIsAlreadyAnUserMessage = getConfigString("messages.PlayerIsAlreadyAnUserMessage", "&cPlayer is already an user");
+        this.AddingUserSuccessfulMessage = getConfigString("messages.AddingUserSuccessfulMessage", "&aAdded user!");
+        this.ManageYourselfMessage = getConfigString("messages.ManageYourselfMessage", "&cYou can't manage yourself!");
+        this.CantCombineMessage = getConfigString("messages.CantCombineMessage", "&cYou can't combine this because its locked!");
+        this.EnableHelpMessage = getConfigBoolean("settings.EnableHelpMessage", true);
+        this.CommandNotFound = getConfigBoolean("settings.CommandNotFound", true);
+        this.CommandNotFoundMessage = getConfigString("settings.CommandNotFoundMessage", "&cCommand not found!");
+        this.SelectBlockToInspectMessage = getConfigString("messages.SelectBlockToInspectMessage", "&aSelect an block to inspect");
+        this.AlreadyInspectingMessage = getConfigString("messages.AlreadyInspectingMessage", "&cYou are already inspecting!");
+        this.PlayerHasMaxUsesMessage = getConfigString("messages.PlayerHasMaxUsesMessage", "&cPlayer has reached the limit of usage");
     }
 
 
@@ -129,9 +160,6 @@ public class ConfigManager {
         return ForceEnabledSuccesMessage;
     }
 
-    public String getHelpMessage() {
-        return HelpMessage;
-    }
 
     public String getLimitLockMessage() {
         return LimitLockMessage;
@@ -183,5 +211,69 @@ public class ConfigManager {
 
     public String getEnabledLockMessage() {
         return EnabledLockMessage;
+    }
+
+    public int getDefaultUserLimit() {
+        return DefaultUserLimit;
+    }
+
+    public String getUserDeleteSuccesMessage() {
+        return UserDeleteSuccesMessage;
+    }
+
+    public String getPromoteMessage() {
+        return PromoteMessage;
+    }
+
+    public String getDemoteMessage() {
+        return DemoteMessage;
+    }
+
+    public String getSignText() {
+        return SignText;
+    }
+
+    public String getPlayerNotFoundMessage() {
+        return PlayerNotFoundMessage;
+    }
+
+    public String getPlayerIsAlreadyAnUserMessage() {
+        return PlayerIsAlreadyAnUserMessage;
+    }
+
+    public String getAddingUserSuccessfulMessage() {
+        return AddingUserSuccessfulMessage;
+    }
+
+    public String getManageYourselfMessage() {
+        return ManageYourselfMessage;
+    }
+
+    public String getCantCombineMessage() {
+        return CantCombineMessage;
+    }
+
+    public Boolean getEnableHelpMessage() {
+        return EnableHelpMessage;
+    }
+
+    public Boolean getCommandNotFound() {
+        return CommandNotFound;
+    }
+
+    public String getCommandNotFoundMessage() {
+        return CommandNotFoundMessage;
+    }
+
+    public String getSelectBlockToInspectMessage() {
+        return SelectBlockToInspectMessage;
+    }
+
+    public String getAlreadyInspectingMessage() {
+        return AlreadyInspectingMessage;
+    }
+
+    public String getPlayerHasMaxUsesMessage() {
+        return PlayerHasMaxUsesMessage;
     }
 }

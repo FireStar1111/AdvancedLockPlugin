@@ -7,11 +7,20 @@ settings:
   ActionBarMessage: "&cLocked"
   # one step before delete a lock
   SubmitMenu: true
+  DefaultUserLimit: 7
+  # the text that is displayed when opening a sign
+  # Color is not supported!
+  SignText: "Type here"
+
+  EnableHelpMessage: true
+
+  CommandNotFound: true
+  CommandNotFoundMessage: "&cCommand not found"
+
 messages:
   SuccesMessageCreate: "&aSuccessful locked"
   LimitLockMessage: "&cYou cant lock things, because you have reach your limit."
   SelectBlockMessage: "&eSelect the block you want to lock. Use /lock help for more information"
-  HelpMessage: "&e&lWelcome to advanced-lock plugin! Use /lock to begin."
   ForceEnabledSuccesMessage: "&aSuccessful enabled force-modus!"
   ForceDisabledSuccesMessage: "&cSuccessful disabled force-modes!"
   BlockIsLockedMessage: "&cYou can't open this, because it's locked!"
@@ -27,3 +36,14 @@ messages:
   CancelLockDeleteMessage: "&cYou successful canceled deletion"
   DisableLockMessage: "&cSuccessful disabled lock modus!"
   EnabledLockMessage: "&aSuccessful enabled lock modus!"
+  UserDeleteSuccesMessage: "&aSuccessful deleted user!"
+  PromoteMessage: "&aUser promoted!"
+  DemoteMessage: "&cUser demoted"
+  PlayerNotFoundMessage: "&cPlayer not found!"
+  PlayerIsAlreadyAnUserMessage: "&cPlayer is already an user"
+  AddingUserSuccessfulMessage: "&aAdded user!"
+  ManageYourselfMessage: "&cYou can't manage yourself!"
+  CantCombineMessage: "&cYou can't combine this because its locked!"
+  SelectBlockToInspectMessage: "&aSelect an block to inspect"
+  AlreadyInspectingMessage: "&cYou are already inspecting!"
+  PlayerHasMaxUsesMessage: "&cPlayer has reached the limit of usage"

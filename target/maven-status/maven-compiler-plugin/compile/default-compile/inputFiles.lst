@@ -5,6 +5,8 @@ D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLo
 D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\listeners\onInventoryClick.java
 D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\listeners\onJoinEvent.java
 D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\listeners\onLeaveListener.java
+D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\listeners\onMoveEvent.java
+D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\listeners\onSignChange.java
 D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\managers\ClassManager.java
 D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\managers\ConfigManager.java
 D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\managers\LockDataManager.java
@@ -13,8 +15,10 @@ D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLo
 D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\Menus\AdminMenu.java
 D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\Menus\SettingsMenu.java
 D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\Menus\SubmitMenu.java
+D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\utils\Block.java
 D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\utils\Color.java
 D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\utils\CustomPlayerHead.java
 D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\utils\itemStack.java
 D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\utils\LocationtoString.java
 D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\utils\LockPlayer.java
+D:\development\spigotmc\advancedLockPlugin\src\main\java\dev\firestar\advancedLockPlugin\utils\Sign.java

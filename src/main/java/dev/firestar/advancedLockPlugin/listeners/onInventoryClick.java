@@ -7,25 +7,31 @@ import dev.firestar.advancedLockPlugin.managers.LockDataManager;
 import dev.firestar.advancedLockPlugin.managers.PlayerDataManager;
 import dev.firestar.advancedLockPlugin.utils.Color;
 import dev.firestar.advancedLockPlugin.utils.LocationtoString;
+import dev.firestar.advancedLockPlugin.utils.Sign;
 import dev.firestar.advancedLockPlugin.utils.itemStack;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class onInventoryClick implements Listener {
 
     private final AdvancedLockPlugin advancedLockPlugin;
-    private ClassManager classManager;
-    private PlayerDataManager playerDataManager;
-    private ConfigManager configManager;
-    private LockDataManager lockDataManager;
+    private final ClassManager classManager;
+    private final PlayerDataManager playerDataManager;
+    private final ConfigManager configManager;
+    private final LockDataManager lockDataManager;
     private final LocationtoString locationtoString;
     public onInventoryClick(AdvancedLockPlugin advancedLockPlugin) {
         this.advancedLockPlugin = advancedLockPlugin;
@@ -48,7 +54,7 @@ public class onInventoryClick implements Listener {
                     ItemStack delButton = event.getCurrentItem();
                     Location location = locationtoString.convertToLocation(itemStack.getNameSpaceKey(delButton, "delbutton", "location"));
                     if (!configManager.getSubmitMenu()){
-                        lockDataManager.deleteLock(location);
+                        lockDataManager.deleteLock(location, playerDataManager);
                         player.sendMessage(Color.format(configManager.getSuccessLockDeleteMessage()));
                         player.closeInventory();
                         return;
@@ -87,7 +93,7 @@ public class onInventoryClick implements Listener {
             ItemStack item = event.getCurrentItem();
             if (item.getType().equals(Material.EMERALD_BLOCK)){
                 Location location = locationtoString.convertToLocation(itemStack.getNameSpaceKey(item, "successbutton", "location"));
-                lockDataManager.deleteLock(location);
+                lockDataManager.deleteLock(location, playerDataManager);
                 player.sendMessage(Color.format(configManager.getSuccessLockDeleteMessage()));
                 player.closeInventory();
                 return;
@@ -100,9 +106,69 @@ public class onInventoryClick implements Listener {
 
         } else if (event.getView().getTitle().equals("Manage admins")) {
             event.setCancelled(true);
+            ItemStack pagebutton = event.getClickedInventory().getItem(49);
+            Location location = locationtoString.convertToLocation(itemStack.getNameSpaceKey(pagebutton, "pagebutton", "location"));
             ItemStack itemStack = event.getCurrentItem();
-            if (itemStack.getType().equals(Material.PLAYER_HEAD) && itemStack.getItemMeta().getDisplayName() != null){
+            int currentPage = Integer.parseInt(pagebutton.getItemMeta().getDisplayName().replace("Page", "").trim());
+            if (itemStack.getType().equals(Material.OAK_SIGN)){
+                Sign.openCustomSign((Player) event.getWhoClicked(), advancedLockPlugin);
+                Map<Player, Location> map = lockDataManager.getOnSignEdit();
+                map.put((Player) event.getWhoClicked(), location);
+                lockDataManager.setOnSignEdit(map);
+            } else if (itemStack.getItemMeta().getDisplayName().equals(Color.format("&cReturn")) ||
+                itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("Return")){
+                classManager.getSettingsMenu().openMenu((Player) event.getWhoClicked(), location);
+            }
+            if (itemStack.getItemMeta().getDisplayName() != null){
+                UUID targetId = UUID.fromString(dev.firestar.advancedLockPlugin.utils.itemStack.getNameSpaceKey(event.getCurrentItem(), "player", "id"));
+                if (targetId == null || Bukkit.getOfflinePlayer(targetId) == null){
+                    if (itemStack.getItemMeta().getDisplayName().equals(Color.format("&7<< Previous page"))){
+                        classManager.getAdminMenu().openInv((Player) event.getWhoClicked(), location, currentPage - 1);
 
+                    } else if (itemStack.getItemMeta().getDisplayName().equals(Color.format("&7Next page >>"))) {
+                        classManager.getAdminMenu().openInv((Player) event.getWhoClicked(), location, currentPage + 1);
+                    }
+                    return;
+                }
+                Player player = (Player) event.getWhoClicked();
+                if (player.getUniqueId().equals(targetId)){
+                    player.sendMessage(Color.format(configManager.getManageYourselfMessage()));
+                    return;
+                }
+                if (lockDataManager.getOwnerUUID(location).equals(targetId)) {
+
+                } else if (lockDataManager.getAdmins(location).contains(Bukkit.getOfflinePlayer(targetId))) {
+                    if (event.getClick().equals(ClickType.LEFT)){
+                        lockDataManager.removeAdmin(location, targetId);
+                        player.sendMessage(Color.format(configManager.getDemoteMessage()));
+                        classManager.getAdminMenu().openInv(player, location, currentPage);
+                    } else if (event.getClick().equals(ClickType.SHIFT_RIGHT)) {
+                        lockDataManager.removeAdmin(location, targetId);
+                        lockDataManager.removeUser(location, targetId, playerDataManager);
+                        classManager.getAdminMenu().openInv(player, location, currentPage);
+                        player.sendMessage(Color.format(configManager.getUserDeleteSuccesMessage()));
+                    }
+
+
+                } else {
+                    if (lockDataManager.getAdmins(location).contains(Bukkit.getOfflinePlayer(player.getUniqueId()))){
+                        if (event.getClick().equals(ClickType.SHIFT_RIGHT)){
+                            lockDataManager.removeUser(location, targetId, playerDataManager);
+                            classManager.getAdminMenu().openInv(player, location, currentPage);
+                            player.sendMessage(Color.format(configManager.getUserDeleteSuccesMessage()));
+                        }
+                        if (event.getClick().equals(ClickType.RIGHT)){
+                            lockDataManager.addAdmin(location, targetId);
+                            player.sendMessage(Color.format(configManager.getPromoteMessage()));
+                            classManager.getAdminMenu().openInv(player, location, currentPage);
+                        }
+
+                    } else {
+                        return;
+                    }
+
+
+                }
 
 
             }

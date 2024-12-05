@@ -19,7 +19,7 @@ public class LockPlayer{
         player.getName();
     }
     public void sendMessage(String message){
-        player.sendMessage(message);
+        player.sendMessage(Color.format(message));
     }
     public Player getPlayer(){
         return player;

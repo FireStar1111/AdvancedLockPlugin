@@ -32,6 +32,11 @@
       <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="nexus-repo" />
+      <option name="name" value="nexus-repo" />
+      <option name="url" value="http://146.103.47.72:8081/#admin/repository/repositories:ItemStackBuilder" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Maven Central repository" />
       <option name="url" value="https://repo1.maven.org/maven2" />

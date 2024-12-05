@@ -52,6 +52,10 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
@@ -66,10 +70,6 @@
         <repository>
             <id>central</id>
             <url>https://repo.maven.apache.org/maven2</url>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
         </repository>
         <repository>
             <id>codemc</id>
@@ -94,5 +94,16 @@
             <artifactId>guava</artifactId>
             <version>31.0.1-jre</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.FireStar1111</groupId>
+            <artifactId>UpdateUtil</artifactId>
+            <version>06776ab19c</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.FireStar1111</groupId>
+            <artifactId>ItemStackBuilder</artifactId>
+            <version>529b861a1f</version>
+        </dependency>
+
     </dependencies>
 </project>

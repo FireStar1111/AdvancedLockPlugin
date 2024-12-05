@@ -1,13 +1,14 @@
 package dev.firestar.advancedLockPlugin.utils;
 
+import dev.firestar.SkullBuilder;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -43,18 +44,11 @@ public class itemStack {
     }
     public static ItemStack getPlayerHead(OfflinePlayer player, String[] lore, String displayName) {
         // Maak een nieuwe skull item
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
-
-        // Pas de metadata aan
-        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-        if (skullMeta != null) {
-            skullMeta.setOwningPlayer(player);
-            skullMeta.setLore(Arrays.stream(lore).toList());
-            skullMeta.setDisplayName(displayName);
-            // Stel de speler in
-            skull.setItemMeta(skullMeta);
-        }
-
+        ItemStack skull = SkullBuilder.getSkullByPlayer(player);
+        ItemMeta meta = skull.getItemMeta();
+        meta.setDisplayName(displayName);
+        meta.setLore(List.of(lore));
+        skull.setItemMeta(meta);
         return skull;
     }
 
