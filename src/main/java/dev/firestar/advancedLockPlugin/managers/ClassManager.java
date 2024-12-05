@@ -7,6 +7,7 @@ import dev.firestar.advancedLockPlugin.Menus.SubmitMenu;
 import dev.firestar.advancedLockPlugin.commands.LockCommand;
 import dev.firestar.advancedLockPlugin.listeners.*;
 import dev.firestar.advancedLockPlugin.utils.LocationtoString;
+import dev.firestar.advancedLockPlugin.utils.Updater;
 
 public class ClassManager implements Manager {
 
@@ -18,6 +19,7 @@ public class ClassManager implements Manager {
     private final AdvancedLockPlugin advancedLockPlugin;
     private SubmitMenu submitMenu;
     private AdminMenu adminMenu;
+    private Updater updater;
     public ClassManager(AdvancedLockPlugin advancedLockPlugin) {
         this.advancedLockPlugin = advancedLockPlugin;
     }
@@ -57,6 +59,7 @@ public class ClassManager implements Manager {
         settingsMenu = new SettingsMenu(advancedLockPlugin);
         submitMenu = new SubmitMenu(advancedLockPlugin);
         adminMenu = new AdminMenu(advancedLockPlugin);
+        updater = new Updater(advancedLockPlugin);
     }
 
     public LockDataManager getLockDataManager() {
@@ -83,5 +86,9 @@ public class ClassManager implements Manager {
     }
     public AdminMenu getAdminMenu() {
         return adminMenu;
+    }
+
+    public Updater getUpdater() {
+        return updater;
     }
 }

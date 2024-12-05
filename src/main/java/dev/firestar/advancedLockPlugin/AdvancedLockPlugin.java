@@ -21,12 +21,14 @@ public final class AdvancedLockPlugin extends JavaPlugin {
         classManager.registerClasses();
         classManager.registerCommands();
         classManager.registerListeners();
-
+        if (classManager.getUpdater().checkAndUpdate()){
+            classManager.getUpdater().restartServer();
+        }
     }
 
     @Override
     public void onDisable() {
-
+        classManager.getUpdater().checkAndUpdate();
     }
 
     public ClassManager getClassManager() {
