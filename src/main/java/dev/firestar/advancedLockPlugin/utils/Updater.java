@@ -23,7 +23,7 @@ public class Updater {
     }
     public boolean checkAndUpdate(){
 
-        return UpdateUtil.checkForUpdates(VERSION, "FireStar1111", "ExpBottle", getPluginFile());
+        return UpdateUtil.checkForUpdates(VERSION, "FireStar1111", "AdvancedLockPlugin", getPluginFile());
 
     }
 
